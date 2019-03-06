@@ -4,4 +4,5 @@ branches:
 projects:
   ChestFinder:
     path: ""
+    icon: "icon-cf.png"
 ...
