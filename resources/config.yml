@@ -1,0 +1,17 @@
+---
+#The id and meta of the item:
+id: "445:0"
+
+#Messages:
+ #{chestCount} to indicate the number of vaults around the player.
+ #{chestDistance} to indicate the distance between player and the chest.
+ #{lineBreak} to make a line break.
+no-chest: "§cNo chest around you"
+chest-detected: "§aThere are {chestCount} chest(s) near you...{lineBreak}The closest chest near you is at {chestDistance} !"
+
+#The radius of detection:
+radius: 70
+
+#The time between each search in seconds (the lower it is, the more risk there is of lag):
+repeat: 2
+...
