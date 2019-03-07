@@ -1,6 +1,6 @@
 <?php
 
-namespace bluzzi;
+namespace bluzzi\chestfinder;
 
 use pocketmine\scheduler\Task;
 

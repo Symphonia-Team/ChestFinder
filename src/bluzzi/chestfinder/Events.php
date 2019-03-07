@@ -1,6 +1,6 @@
 <?php
 
-namespace bluzzi;
+namespace bluzzi\chestfinder;
 
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerItemHeldEvent;
@@ -12,7 +12,7 @@ use pocketmine\Player;
 
 use pocketmine\utils\Config;
 
-use bluzzi\ChestFinder;
+use bluzzi\chestfinder\ChestFinder;
 
 class Events implements Listener {
 

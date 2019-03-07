@@ -1,6 +1,6 @@
 <?php
 
-namespace bluzzi;
+namespace bluzzi\chestfinder;
 
 use pocketmine\plugin\PluginBase;
 
@@ -8,7 +8,7 @@ use pocketmine\Server;
 
 use pocketmine\utils\Config;
 
-use bluzzi\Events;
+use bluzzi\chestfinder\Events;
 
 class Main extends PluginBase {
     
