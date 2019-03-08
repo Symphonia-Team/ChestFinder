@@ -5,6 +5,9 @@ namespace bluzzi\chestfinder;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\level\ChunkLoadEvent;
+use pocketmine\event\block\BlockPlaceEvent;
+use pocketmine\event\block\BlockBreakEvent;
 
 use pocketmine\item\Item;
 
@@ -30,6 +33,33 @@ class Events implements Listener {
 
     public function onJoin(PlayerJoinEvent $event){
         $this->checkAndStart($event->getPlayer(), $event->getPlayer()->getInventory()->getItemInHand());
+    }
+
+    public function onChunkLoad(ChunkLoadEvent $event){
+        $chunk = $event->getChunk();
+
+        foreach($chunk->getTiles() as $tile){
+            if($tile instanceof \pocketmine\tile\Chest){
+                array_push($this->plugin->chests, $tile);
+            }
+        }
+    }
+
+    public function onPlace(BlockPlaceEvent $event){
+        $block = $event->getBlock();
+
+        if($block instanceof \pocketmine\block\Chest){
+            array_push($this->plugin->chests, $block);
+        }
+    }
+
+    public function onBreak(BlockBreakEvent $event){
+        $block = $event->getBlock();
+
+        if($block instanceof \pocketmine\block\Chest){
+            $key = array_search($block, $this->plugin->chests);
+            unset($this->plugin->chests[$key]);
+        }
     }
 
     /**

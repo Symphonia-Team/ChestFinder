@@ -43,19 +43,17 @@ class ChestFinder extends Task {
         $chestCount = 0;
         $theChest;
 
-        foreach($this->player->getLevel()->getTiles() as $tile){
-            if($tile instanceof Chest){
-                if($this->player->distance($tile) <= $this->plugin->config->get("radius")){
-                    if(empty($theChest)){
-                        $theChest = $tile;
-                    } else {
-                        if($this->player->distance($tile) < $this->player->distance($theChest)){
-                            $theChest = $tile;
-                        }
+        foreach($this->plugin->chests as $chest){
+            if($this->player->distance($chest) <= $this->plugin->config->get("radius")){
+                if(empty($theChest)){
+                    $theChest = $chest;
+                } else {
+                    if($this->player->distance($chest) < $this->player->distance($theChest)){
+                        $theChest = $chest;
                     }
-
-                    $chestCount++;
                 }
+
+                $chestCount++;
             }
         }
 
