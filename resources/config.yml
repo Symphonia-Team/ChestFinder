@@ -7,7 +7,7 @@ id: "445:0"
  #{chestDistance} to indicate the distance between player and the chest.
  #{lineBreak} to make a line break.
 no-chest: "§cNo chest around you"
-chest-detected: "§aThere are {chestCount} chest(s) near you...{lineBreak}The closest chest near you is at {chestDistance} !"
+chest-detected: "§aThere are {chestCount} chest(s) near you...{lineBreak}The closest chest near you is at {chestDistance} blocks !"
 
 #The radius of detection:
 radius: 70

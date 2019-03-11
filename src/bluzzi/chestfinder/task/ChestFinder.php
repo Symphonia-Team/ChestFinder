@@ -1,6 +1,6 @@
 <?php
 
-namespace bluzzi\chestfinder;
+namespace bluzzi\chestfinder\task;
 
 use pocketmine\scheduler\Task;
 
@@ -40,23 +40,37 @@ class ChestFinder extends Task {
             return;
         }
 
+        //Chests detection:
         $chestCount = 0;
         $theChest;
 
-        foreach($this->plugin->chests as $chest){
-            if($this->player->distance($chest) <= $this->plugin->config->get("radius")){
-                if(empty($theChest)){
-                    $theChest = $chest;
-                } else {
-                    if($this->player->distance($chest) < $this->player->distance($theChest)){
-                        $theChest = $chest;
+        $radius = $this->plugin->config->get("radius");
+
+        $xMax = $this->player->getX() + $radius;
+        $zMax = $this->player->getZ() + $radius;
+
+        for($x = $this->player->getX() - $radius; $x <= $xMax; $x += 16){
+            for($z = $this->player->getZ() - $radius; $z <= $zMax; $z += 16){
+                $chunk = $this->player->getLevel()->getChunk($x >> 4, $z >> 4);
+                $chunkPos = $chunk->getX() . ":" . $chunk->getZ();
+
+                foreach($this->plugin->chests[$chunkPos] as $chest){
+                    if($this->player->distance($chest) <= $this->plugin->config->get("radius")){
+                        if(empty($theChest)){
+                            $theChest = $chest;
+                        } else {
+                            if($this->player->distance($chest) < $this->player->distance($theChest)){
+                                $theChest = $chest;
+                            }
+                        }
+        
+                        $chestCount++;
                     }
                 }
-
-                $chestCount++;
             }
         }
 
+        //Send popup message:
         if($chestCount !== 0){
             $replace = array(
                 "{chestCount}" => $chestCount,

@@ -9,13 +9,16 @@ use pocketmine\event\level\ChunkLoadEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\BlockBreakEvent;
 
+use pocketmine\level\format\Chunk;
+
 use pocketmine\item\Item;
 
 use pocketmine\Player;
 
 use pocketmine\utils\Config;
 
-use bluzzi\chestfinder\ChestFinder;
+use bluzzi\chestfinder\task\ChestFinder;
+use bluzzi\chestfinder\task\ReloadChunkChests;
 
 class Events implements Listener {
 
@@ -27,38 +30,52 @@ class Events implements Listener {
         $this->plugin = $plugin;
     }
 
-    public function onHeld(PlayerItemHeldEvent $event){
-        $this->checkAndStart($event->getPlayer(), $event->getItem());
-    }
-
     public function onJoin(PlayerJoinEvent $event){
         $this->checkAndStart($event->getPlayer(), $event->getPlayer()->getInventory()->getItemInHand());
+    }
+
+    public function onHeld(PlayerItemHeldEvent $event){
+        $this->checkAndStart($event->getPlayer(), $event->getItem());
     }
 
     public function onChunkLoad(ChunkLoadEvent $event){
         $chunk = $event->getChunk();
 
-        foreach($chunk->getTiles() as $tile){
-            if($tile instanceof \pocketmine\tile\Chest){
-                array_push($this->plugin->chests, $tile);
-            }
-        }
+        $this->reloadChunkChests($chunk);
     }
 
     public function onPlace(BlockPlaceEvent $event){
         $block = $event->getBlock();
+        $chunk = $block->getLevel()->getChunk($block->getX() >> 4, $block->getZ() >> 4);
 
         if($block instanceof \pocketmine\block\Chest){
-            array_push($this->plugin->chests, $block);
+            $this->plugin->getScheduler()->scheduleDelayedTask(new ReloadChunkChests($this, $chunk), 1);
         }
     }
 
     public function onBreak(BlockBreakEvent $event){
         $block = $event->getBlock();
-
+        $chunk = $block->getLevel()->getChunk($block->getX() >> 4, $block->getZ() >> 4);
+        
         if($block instanceof \pocketmine\block\Chest){
-            $key = array_search($block, $this->plugin->chests);
-            unset($this->plugin->chests[$key]);
+            $this->plugin->getScheduler()->scheduleDelayedTask(new ReloadChunkChests($this, $chunk), 1);
+        }
+    }
+
+    /**
+     * Reload list of chests in a chunk of the chests array.
+     * @param Chunk $chunk
+     * @return void
+     */
+    public function reloadChunkChests(Chunk $chunk){
+        $chunkPos = $chunk->getX() . ":" . $chunk->getZ();
+
+        $this->plugin->chests[$chunkPos] = array();
+
+        foreach($chunk->getTiles() as $tile){
+            if($tile instanceof \pocketmine\tile\Chest){
+                array_push($this->plugin->chests[$chunkPos], $tile);
+            }
         }
     }
 
