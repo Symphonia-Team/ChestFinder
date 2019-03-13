@@ -13,6 +13,7 @@ use bluzzi\chestfinder\Events;
 class Main extends PluginBase {
     
     public $config;
+    public $chests = [];
 
     public function onEnable(){
         if(!file_exists($this->getDataFolder() . "config.yml")){
