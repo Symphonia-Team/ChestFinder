@@ -54,6 +54,10 @@ class ChestFinder extends Task {
                 $chunk = $this->player->getLevel()->getChunk($x >> 4, $z >> 4);
                 $chunkPos = $chunk->getX() . ":" . $chunk->getZ();
 
+                if(empty($this->plugin->chests[$chunkPos])){
+                    $this->event->reloadChunkChests($chunk);
+                }
+
                 foreach($this->plugin->chests[$chunkPos] as $chest){
                     if($this->player->distance($chest) <= $this->plugin->config->get("radius")){
                         if(empty($theChest)){
