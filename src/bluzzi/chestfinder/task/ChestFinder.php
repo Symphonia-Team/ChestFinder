@@ -80,7 +80,7 @@ class ChestFinder extends Task {
             $replace = array(
                 "{chestCount}" => $chestCount,
                 "{chestDistance}" => round($this->player->distance($theChest), 0),
-                "{lineBreak}" => "\n"
+                "{lineBreak}" => PHP_EOL
             );
 
             $message = $this->plugin->config->get("chest-detected");
