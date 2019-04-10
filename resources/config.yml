@@ -12,6 +12,6 @@ chest-detected: "§aThere are {chestCount} chest(s) near you...{lineBreak}The cl
 #The radius of detection:
 radius: 70
 
-#The time between each search in seconds (the lower it is, the more risk there is of lag):
-repeat: 2
+#The time between each search in seconds (the lower it is, the more risk there is of lag; Recommanded: 3):
+repeat: 1
 ...
