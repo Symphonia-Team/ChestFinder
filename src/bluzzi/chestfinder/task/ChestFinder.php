@@ -40,7 +40,7 @@ class ChestFinder extends Task {
             return;
         }
 
-        //Chests detection:
+        # Chests detection:
         $chestCount = 0;
         $theChest;
 
@@ -75,7 +75,7 @@ class ChestFinder extends Task {
             }
         }
 
-        //Send popup message:
+        # Send popup message:
         if($chestCount !== 0){
             $replace = array(
                 "{chestCount}" => $chestCount,
