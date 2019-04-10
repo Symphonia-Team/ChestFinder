@@ -38,47 +38,6 @@ class Events implements Listener {
         $this->checkAndStart($event->getPlayer(), $event->getItem());
     }
 
-    public function onChunkLoad(ChunkLoadEvent $event){
-        $chunk = $event->getChunk();
-
-        $this->reloadChunkChests($chunk);
-    }
-
-    public function onPlace(BlockPlaceEvent $event){
-        $block = $event->getBlock();
-        $chunk = $block->getLevel()->getChunk($block->getX() >> 4, $block->getZ() >> 4);
-
-        if($block instanceof \pocketmine\block\Chest){
-            $this->plugin->getScheduler()->scheduleDelayedTask(new ReloadChunkChests($this, $chunk), 1);
-        }
-    }
-
-    public function onBreak(BlockBreakEvent $event){
-        $block = $event->getBlock();
-        $chunk = $block->getLevel()->getChunk($block->getX() >> 4, $block->getZ() >> 4);
-        
-        if($block instanceof \pocketmine\block\Chest){
-            $this->plugin->getScheduler()->scheduleDelayedTask(new ReloadChunkChests($this, $chunk), 1);
-        }
-    }
-
-    /**
-     * Reload list of chests in a chunk of the chests array.
-     * @param Chunk $chunk
-     * @return void
-     */
-    public function reloadChunkChests(Chunk $chunk){
-        $chunkPos = $chunk->getX() . ":" . $chunk->getZ();
-
-        $this->plugin->chests[$chunkPos] = array();
-
-        foreach($chunk->getTiles() as $tile){
-            if($tile instanceof \pocketmine\tile\Chest){
-                array_push($this->plugin->chests[$chunkPos], $tile);
-            }
-        }
-    }
-
     /**
      * Check if the item in the player's hand matches the ChestFinder item and start the ChestFinder task.
      * @param Player $player

@@ -52,19 +52,20 @@ class ChestFinder extends Task {
         for($x = $this->player->getX() - $radius; $x <= $xMax; $x += 16){
             for($z = $this->player->getZ() - $radius; $z <= $zMax; $z += 16){
                 $chunk = $this->player->getLevel()->getChunk($x >> 4, $z >> 4);
-                $chunkPos = $chunk->getX() . ":" . $chunk->getZ();
 
-                if(empty($this->plugin->chests[$chunkPos])){
-                    $this->event->reloadChunkChests($chunk);
+                if(!$this->player->getLevel()->isChunkLoaded($x >> 4, $z >> 4)){
+                    $this->player->getLevel()->laodChunk($x >> 4, $z >> 4);
                 }
+                
+                foreach($chunk->getTiles() as $tile){
+                    if(!$tile instanceof Chest) continue;
 
-                foreach($this->plugin->chests[$chunkPos] as $chest){
-                    if($this->player->distance($chest) <= $this->plugin->config->get("radius")){
+                    if($this->player->distance($tile) <= $this->plugin->config->get("radius")){
                         if(empty($theChest)){
-                            $theChest = $chest;
+                            $theChest = $tile;
                         } else {
-                            if($this->player->distance($chest) < $this->player->distance($theChest)){
-                                $theChest = $chest;
+                            if($this->player->distance($tile) < $this->player->distance($theChest)){
+                                $theChest = $tile;
                             }
                         }
         
