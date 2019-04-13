@@ -77,17 +77,11 @@ class ChestFinder extends Task {
 
         # Send popup message:
         if($chestCount !== 0){
-            $replace = array(
-                "{chestCount}" => $chestCount,
-                "{chestDistance}" => round($this->player->distance($theChest), 0),
-                "{lineBreak}" => PHP_EOL
+            $message = str_replace(
+                array("{chestCount}", "{chestDistance}", "{lineBreak}"),
+                array($chestCount, round($this->player->distance($theChest), 0), PHP_EOL),
+                $this->plugin->config->get("chest-detected")
             );
-
-            $message = $this->plugin->config->get("chest-detected");
-
-            foreach($replace as $key => $value){
-                $message = str_replace($key, $value, $message);
-            }
 
             $this->player->sendPopup($message);
         } else {
