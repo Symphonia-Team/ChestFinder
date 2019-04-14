@@ -54,7 +54,7 @@ class ChestFinder extends Task {
                 $chunk = $this->player->getLevel()->getChunk($x >> 4, $z >> 4);
 
                 if(!$this->player->getLevel()->isChunkLoaded($x >> 4, $z >> 4)){
-                    $this->player->getLevel()->laodChunk($x >> 4, $z >> 4);
+                    $this->player->getLevel()->loadChunk($x >> 4, $z >> 4);
                 }
                 
                 foreach($chunk->getTiles() as $tile){
