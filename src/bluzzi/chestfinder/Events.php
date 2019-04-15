@@ -6,8 +6,6 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 
-use pocketmine\level\format\Chunk;
-
 use pocketmine\item\Item;
 
 use pocketmine\Player;
