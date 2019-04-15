@@ -82,10 +82,22 @@ class ChestFinder extends Task {
                 array($chestCount, round($this->player->distance($theChest), 0), PHP_EOL),
                 $this->plugin->config->get("chest-detected")
             );
-
-            $this->player->sendPopup($message);
         } else {
-            $this->player->sendPopup($this->plugin->config->get("no-chest"));
+            $message = $this->plugin->config->get("no-chest");
+        }
+
+        switch($this->plugin->config->get("message-position")){
+            case "tip":
+                $this->player->sendTip($message . str_repeat(PHP_EOL, 3));
+            break;
+
+            case "title":
+                $this->player->addTitle(" ", $message);
+            break;
+
+            default:
+                $this->player->sendPopup($message);
+            break;
         }
     }
 }
