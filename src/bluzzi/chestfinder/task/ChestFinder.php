@@ -51,11 +51,11 @@ class ChestFinder extends Task {
 
         for($x = $this->player->getX() - $radius; $x <= $xMax; $x += 16){
             for($z = $this->player->getZ() - $radius; $z <= $zMax; $z += 16){
-                $chunk = $this->player->getLevel()->getChunk($x >> 4, $z >> 4);
-
                 if(!$this->player->getLevel()->isChunkLoaded($x >> 4, $z >> 4)){
                     $this->player->getLevel()->loadChunk($x >> 4, $z >> 4);
                 }
+
+                $chunk = $this->player->getLevel()->getChunk($x >> 4, $z >> 4);
                 
                 foreach($chunk->getTiles() as $tile){
                     if(!$tile instanceof Chest) continue;
