@@ -10,6 +10,7 @@ Detects the number of chests around you and tells you the number of blocks betwe
 | Property | Description | Default |
 |---|---|---|
 | id | The id and meta of the item | 455:0 | 
+| message-position | Message position (popup, tip or title) | popup |
 | radius | The radius of detection | 70 |
 | repeat | The time between each search in seconds (the lower it is, the more risk there is of lag) | 2 |
 
