@@ -6,37 +6,35 @@ use pocketmine\scheduler\Task;
 
 use pocketmine\Player;
 
-use pocketmine\item\Item;;
+use pocketmine\item\Item;
 
 use pocketmine\tile\Chest;
 
-use pocketmine\utils\Config;
+use bluzzi\chestfinder\Main;
 
 class ChestFinder extends Task {
 
     private $player;
     private $event;
-    private $plugin;
 
-    public function __construct(Player $player, $plugin, $event){
+    public function __construct(Player $player, $event){
         $this->player = $player;
-        $this->plugin = $plugin;
         $this->event = $event;
     }
 
     public function onRun(int $tick){
         if(!($this->player->isOnline())){
             unset($this->event->using[$this->player->getName()]);
-            $this->plugin->getScheduler()->cancelTask($this->getTaskId());
+            Main::getInstance()->getScheduler()->cancelTask($this->getTaskId());
             return;
         }
 
         $itemHeld = $this->player->getInventory()->getItemInHand();
-        $item = Item::fromString($this->plugin->config->get("id"));
+        $item = Item::fromString(Main::getDefaultConfig()->get("id"));
 
         if(!($itemHeld->equals($item, true, false))){
             unset($this->event->using[$this->player->getName()]);
-            $this->plugin->getScheduler()->cancelTask($this->getTaskId());
+            Main::getInstance()->getScheduler()->cancelTask($this->getTaskId());
             return;
         }
 
@@ -44,7 +42,7 @@ class ChestFinder extends Task {
         $chestCount = 0;
         $theChest;
 
-        $radius = $this->plugin->config->get("radius");
+        $radius = Main::getDefaultConfig()->get("radius");
 
         $xMax = $this->player->getX() + $radius;
         $zMax = $this->player->getZ() + $radius;
@@ -60,7 +58,7 @@ class ChestFinder extends Task {
                 foreach($chunk->getTiles() as $tile){
                     if(!$tile instanceof Chest) continue;
 
-                    if($this->player->distance($tile) <= $this->plugin->config->get("radius")){
+                    if($this->player->distance($tile) <= Main::getDefaultConfig()->get("radius")){
                         if(empty($theChest)){
                             $theChest = $tile;
                         } else {
@@ -80,13 +78,13 @@ class ChestFinder extends Task {
             $message = str_replace(
                 array("{chestCount}", "{chestDistance}", "{lineBreak}"),
                 array($chestCount, round($this->player->distance($theChest), 0), PHP_EOL),
-                $this->plugin->config->get("chest-detected")
+                Main::getDefaultConfig()->get("chest-detected")
             );
         } else {
-            $message = $this->plugin->config->get("no-chest");
+            $message = Main::getDefaultConfig()->get("no-chest");
         }
 
-        switch($this->plugin->config->get("message-position")){
+        switch(Main::getDefaultConfig()->get("message-position")){
             case "tip":
                 $this->player->sendTip($message . str_repeat(PHP_EOL, 3));
             break;
