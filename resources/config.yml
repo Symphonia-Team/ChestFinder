@@ -1,4 +1,3 @@
----
 # The id and meta of the item:
 id: "445:0"
 
@@ -17,4 +16,6 @@ radius: 70
 
 # The time between each search in seconds (the lower it is, the more risk there is of lag; Recommanded: 3):
 repeat: 1
-...
+
+# Plugin's version, please don't touch it !
+version: "1.5"
