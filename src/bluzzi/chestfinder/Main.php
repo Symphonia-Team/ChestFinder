@@ -41,9 +41,10 @@ class Main extends PluginBase {
         self::$config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 
         foreach (self::$config->get("detection") as $detect) {
-            if (in_array($detect, ["chest", "ender_chest", "hopper", "barrel", "shulker"])) {
+            if (in_array($detect, ["chest", "trapped_chest", "ender_chest", "hopper", "barrel", "shulker"])) {
                 self::$detects[] = match ($detect) {
 					"chest" => Chest::class,
+                    "trapped_chest" => "TrappedChest",
 					"ender_chest" => EnderChest::class,
 					"hopper" => Hopper::class,
 					"barrel" => Barrel::class,

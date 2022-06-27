@@ -10,12 +10,13 @@ You can download the latest version of the plugin in the [releases](https://gith
 
 ## Configuration:
 ### Base config
-| Property | Description | Default |
-|---|---|---|
-| id | The id and meta of the item | 455:0 | 
-| message-position | Message position (popup, tip or title) | popup |
-| radius | The radius of detection | 70 |
-| repeat | The time between each search in seconds (the lower it is, the more risk there is of lag) | 2 |
+| Property | Description                                                                              | Default   |
+|---|------------------------------------------------------------------------------------------|-----------|
+| id | The id and meta of the item                                                              | 455:0     | 
+| message-position | Message position (popup, tip or title)                                                   | popup     |
+| radius | The radius of detection                                                                  | 70        |
+| detection | The blocks can be detected (chest, trapped_chest, ender_chest, hopper, barrel, shulker)  | chest     |
+| repeat | The time between each search in seconds (the lower it is, the more risk there is of lag) | 2         |
 
 ### Messages
 Tags:
