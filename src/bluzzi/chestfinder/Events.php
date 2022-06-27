@@ -20,7 +20,6 @@ class Events implements Listener {
 	}
 
 	public function onHeld(PlayerItemHeldEvent $event) {
-		var_dump("aa");
 		$this->checkAndStart($event->getPlayer(), $event->getItem());
 	}
 
