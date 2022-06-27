@@ -35,8 +35,8 @@ You can find all official update in the tab [releases](https://github.com/Bluzzi
 - [ChestFinder 1.0](https://github.com/Bluzzi/ChestFinder/releases/tag/1.1)
 ### Future updates
 - [x] Automatic configuration update system.
+- [X] Possibility to detect trapped chests, ender chests... and other ?
 - [ ] To be able to choose the distance from there it will be indicated the exact distance with the chest (issue #4).
-- [ ] Possibility to detect trapped chests, ender chests... and other ?
 - [ ] More indication in the console.
 
 ## Error or suggestion

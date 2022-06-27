@@ -2,11 +2,11 @@
 
 namespace bluzzi\chestfinder\task;
 
-use bluzzi\chestfinder\Main;
 use pocketmine\block\tile\Chest;
 use pocketmine\item\LegacyStringToItemParser;
 use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
+use bluzzi\chestfinder\Main;
 use bluzzi\chestfinder\Events;
 
 class ChestFinder extends Task {
@@ -47,7 +47,7 @@ class ChestFinder extends Task {
 					$chunk = $this->player->getPosition()->getWorld()->getChunk($x >> 4, $z >> 4);
 
 					foreach($chunk->getTiles() as $tile){
-						if(!$tile instanceof Chest) continue;
+						if (!in_array($tile::class, Main::$detects)) continue;
 
 						if($this->player->getPosition()->distance($tile->getBlock()->getPosition()->asVector3()) <= Main::getDefaultConfig()->get("radius")){
 							if(empty($theChest)){
