@@ -20,21 +20,21 @@ class Main extends PluginBase {
 
     protected function onEnable() : void {
         # Creating the configuration if it is not done and updating it:
-		if(file_exists($this->getDataFolder() . "config.yml")){
-			$config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+        if(file_exists($this->getDataFolder() . "config.yml")){
+            $config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 
-			if($config->get("version") !== $this->getDescription()->getVersion() or !$config->exists("version")){
-				$this->getLogger()->warning("Critical changes have been made in the new version of the plugin and it seem that your config.yml is a older config.");
-				$this->getLogger()->warning("Your config has been updated, be careful to check the content change !");
-				$this->getLogger()->warning("You can find your old config in oldConfig.yml file.");
+            if($config->get("version") !== $this->getDescription()->getVersion() or !$config->exists("version")){
+                $this->getLogger()->warning("Critical changes have been made in the new version of the plugin and it seem that your config.yml is a older config.");
+                $this->getLogger()->warning("Your config has been updated, be careful to check the content change !");
+                $this->getLogger()->warning("You can find your old config in oldConfig.yml file.");
 
-				rename($this->getDataFolder() . "config.yml", $this->getDataFolder() . "oldConfig.yml");
-				$this->saveResource("config.yml", true);
-			}
-		} else {
-			$this->getLogger()->info("The ChestFinder config as been created !");
-			$this->saveResource("config.yml");
-		}
+                rename($this->getDataFolder() . "config.yml", $this->getDataFolder() . "oldConfig.yml");
+                $this->saveResource("config.yml", true);
+            }
+        } else {
+            $this->getLogger()->info("The ChestFinder config as been created !");
+            $this->saveResource("config.yml");
+        }
 
         # Register statics:
         self::$main = $this;
@@ -43,15 +43,15 @@ class Main extends PluginBase {
         foreach (self::$config->get("detection") as $detect) {
             if (in_array($detect, ["chest", "trapped_chest", "ender_chest", "hopper", "barrel", "shulker"])) {
                 self::$detects[] = match ($detect) {
-					"chest" => Chest::class,
+                    "chest" => Chest::class,
                     "trapped_chest" => "TrappedChest",
-					"ender_chest" => EnderChest::class,
-					"hopper" => Hopper::class,
-					"barrel" => Barrel::class,
-					"shulker" => ShulkerBox::class
-				};
-			}
-		}
+                    "ender_chest" => EnderChest::class,
+                    "hopper" => Hopper::class,
+                    "barrel" => Barrel::class,
+                    "shulker" => ShulkerBox::class
+                };
+            }
+        }
         
         # Register events:
         Server::getInstance()->getPluginManager()->registerEvents(new Events(), $this);
