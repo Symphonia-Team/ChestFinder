@@ -3,6 +3,7 @@
 namespace bluzzi\chestfinder\task;
 
 use pocketmine\block\tile\Chest;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\item\LegacyStringToItemParser;
 use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
@@ -47,7 +48,7 @@ class ChestFinder extends Task {
 					$chunk = $this->player->getPosition()->getWorld()->getChunk($x >> 4, $z >> 4);
 
 					foreach($chunk->getTiles() as $tile){
-						if (!in_array($tile::class, Main::$detects)) continue;
+						if (!in_array($tile->getBlock()->getId() == VanillaBlocks::TRAPPED_CHEST()->getId() ? "TrappedChest" : $tile::class, Main::$detects)) continue;
 
 						if($this->player->getPosition()->distance($tile->getBlock()->getPosition()->asVector3()) <= Main::getDefaultConfig()->get("radius")){
 							if(empty($theChest)){
