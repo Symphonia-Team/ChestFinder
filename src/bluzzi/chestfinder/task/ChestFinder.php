@@ -7,20 +7,14 @@ use pocketmine\block\tile\Chest;
 use pocketmine\item\LegacyStringToItemParser;
 use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
+use bluzzi\chestfinder\Events;
 
 class ChestFinder extends Task {
 
-	private Player $player;
+	public function __construct(private Player $player, private Events $event){}
 
-	private $event;
-
-	public function __construct(Player $player, $event) {
-		$this->player = $player;
-		$this->event = $event;
-	}
-
-	public function onRun(): void {
-		if (!($this->player->isOnline())) {
+	public function onRun() : void {
+		if(!($this->player->isOnline())){
 			unset($this->event->using[$this->player->getName()]);
 			$this->getHandler()->cancel();
 			return;
@@ -31,7 +25,7 @@ class ChestFinder extends Task {
 		// I use LegacyStringToItemParser instead of StringToItemParser because, the option of before (StringToItemParser) takes only with the minecraft: or _ character, while the Legacy version with the ID:META
 		$item = LegacyStringToItemParser::getInstance()->parse(Main::getDefaultConfig()->get("id"));
 
-		if (!($itemHeld->equals($item, true, false))) {
+		if(!($itemHeld->equals($item, true, false))){
 			unset($this->event->using[$this->player->getName()]);
 			$this->getHandler()->cancel();
 			return;
@@ -45,21 +39,21 @@ class ChestFinder extends Task {
 		$xMax = $this->player->getPosition()->getX() + $radius;
 		$zMax = $this->player->getPosition()->getZ() + $radius;
 
-		for ($x = $this->player->getPosition()->getX() - $radius; $x <= $xMax; $x += 16) {
-			for ($z = $this->player->getPosition()->getZ() - $radius; $z <= $zMax; $z += 16) {
-				if (!$this->player->getPosition()->getWorld()->isChunkLoaded($x >> 4, $z >> 4)) {
+		for($x = $this->player->getPosition()->getX() - $radius; $x <= $xMax; $x += 16){
+			for($z = $this->player->getPosition()->getZ() - $radius; $z <= $zMax; $z += 16){
+				if(!$this->player->getPosition()->getWorld()->isChunkLoaded($x >> 4, $z >> 4)){
 					$this->player->getPosition()->getWorld()->loadChunk($x >> 4, $z >> 4);
 				} else {
 					$chunk = $this->player->getPosition()->getWorld()->getChunk($x >> 4, $z >> 4);
 
-					foreach ($chunk->getTiles() as $tile) {
-						if (!$tile instanceof Chest) continue;
+					foreach($chunk->getTiles() as $tile){
+						if(!$tile instanceof Chest) continue;
 
-						if ($this->player->getPosition()->distance($tile->getPosition()->asVector3()) <= Main::getDefaultConfig()->get("radius")) {
-							if (empty($theChest)) {
+						if($this->player->getPosition()->distance($tile->getBlock()->getPosition()->asVector3()) <= Main::getDefaultConfig()->get("radius")){
+							if(empty($theChest)){
 								$theChest = $tile;
 							} else {
-								if ($this->player->getPosition()->distance($tile->getPosition()->asVector3()) < $this->player->getPosition()->distance($theChest->getPosition()->asVector3())) {
+								if($this->player->getPosition()->distance($tile->getBlock()->getPosition()->asVector3()) < $this->player->getPosition()->distance($theChest->getPosition()->asVector3())){
 									$theChest = $tile;
 								}
 							}
@@ -72,28 +66,28 @@ class ChestFinder extends Task {
 		}
 
 		# Send popup message:
-		if ($chestCount !== 0) {
+		if($chestCount !== 0){
 			$message = str_replace(
 				array("{chestCount}", "{chestDistance}", "{lineBreak}"),
-				array($chestCount, round($this->player->getPosition()->distance($theChest->getPosition()->asVector3())), "\n"), // Not PHP_EOL, because make a character  ō
+				array($chestCount, round($this->player->getPosition()->distance($theChest->getBlock()->getPosition()->asVector3())), "\n"), // Not PHP_EOL, because make a character  ō
 				Main::getDefaultConfig()->get("chest-detected")
 			);
 		} else {
 			$message = Main::getDefaultConfig()->get("no-chest");
 		}
 
-		switch (Main::getDefaultConfig()->get("message-position")) {
+		switch(Main::getDefaultConfig()->get("message-position")){
 			case "tip":
 				$this->player->sendTip($message . str_repeat("\n", 3));
-				break;
+			break;
 
 			case "title":
 				$this->player->sendTitle(" ", $message);
-				break;
+			break;
 
 			default:
 				$this->player->sendPopup($message);
-				break;
+			break;
 		}
 	}
 }

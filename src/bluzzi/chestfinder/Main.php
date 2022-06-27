@@ -3,17 +3,14 @@
 namespace bluzzi\chestfinder;
 
 use pocketmine\plugin\PluginBase;
-
 use pocketmine\Server;
-
 use pocketmine\utils\Config;
-
 use bluzzi\chestfinder\Events;
 
 class Main extends PluginBase {
 
-    /** @var $main, $config instances */
-    public static $main, $config;
+    public static self $main;
+    public static Config $config;
 
     protected function onEnable() : void {
         # Creating the configuration if it is not done and updating it:
