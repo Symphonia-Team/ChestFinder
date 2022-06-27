@@ -2,43 +2,43 @@
 
 namespace bluzzi\chestfinder;
 
+
+use bluzzi\chestfinder\task\ChestFinder;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\event\player\PlayerJoinEvent;
-
 use pocketmine\item\Item;
-
-use pocketmine\Player;
-
-use bluzzi\chestfinder\task\ChestFinder;
-use bluzzi\chestfinder\Main;
+use pocketmine\item\LegacyStringToItemParser;
+use pocketmine\player\Player;
 
 class Events implements Listener {
 
-    public $using = array();
+	public $using = array();
 
-    public function onJoin(PlayerJoinEvent $event){
-        $this->checkAndStart($event->getPlayer(), $event->getPlayer()->getInventory()->getItemInHand());
-    }
+	public function onJoin(PlayerJoinEvent $event) {
+		$this->checkAndStart($event->getPlayer(), $event->getPlayer()->getInventory()->getItemInHand());
+	}
 
-    public function onHeld(PlayerItemHeldEvent $event){
-        $this->checkAndStart($event->getPlayer(), $event->getItem());
-    }
+	public function onHeld(PlayerItemHeldEvent $event) {
+		var_dump("aa");
+		$this->checkAndStart($event->getPlayer(), $event->getItem());
+	}
 
-    /**
-     * Check if the item in the player's hand matches the ChestFinder item and start the ChestFinder task.
-     * @param Player $player
-     * @return void
-     */
-    private function checkAndStart(Player $player, Item $itemHeld) : void {
-        $item = Item::fromString(Main::getDefaultConfig()->get("id"));
-        $name = $player->getName();
+	/**
+	 * Check if the item in the player's hand matches the ChestFinder item and start the ChestFinder task.
+	 * @param Player $player
+	 * @param Item $itemHeld
+	 * @return void
+	 */
+	private function checkAndStart(Player $player, Item $itemHeld): void {
+		$item = LegacyStringToItemParser::getInstance()->parse(Main::getDefaultConfig()->get("id"));
+		$name = $player->getName();
 
-        if($itemHeld->equals($item, true, false)){
-            if(empty($this->using[$name])){
-                Main::getInstance()->getScheduler()->scheduleRepeatingTask(new ChestFinder($player, $this), Main::getDefaultConfig()->get("repeat") * 20);
-                $this->using[$name] = true;
-            }
-        }
-    }
+		if ($itemHeld->equals($item, true, false)) {
+			if (empty($this->using[$name])) {
+				Main::getInstance()->getScheduler()->scheduleRepeatingTask(new ChestFinder($player, $this), Main::getDefaultConfig()->get("repeat") * 20);
+				$this->using[$name] = true;
+			}
+		}
+	}
 }
