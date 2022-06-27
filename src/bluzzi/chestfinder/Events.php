@@ -31,6 +31,7 @@ class Events implements Listener {
 	 * @return void
 	 */
 	private function checkAndStart(Player $player, Item $itemHeld): void {
+		// I use LegacyStringToItemParser instead of StringToItemParser because, the option of before (StringToItemParser) takes only with the minecraft: or _ character, while the Legacy version with the ID:META
 		$item = LegacyStringToItemParser::getInstance()->parse(Main::getDefaultConfig()->get("id"));
 		$name = $player->getName();
 
