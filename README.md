@@ -3,42 +3,34 @@
 [![](https://poggit.pmmp.io/shield.dl.total/ChestFinder)](https://poggit.pmmp.io/p/ChestFinder)
 
 ## Description
-Use the defined item to obtain information on the position of the nearest safes: number of blocks between you and the nearest safe, number of safes in the perimeter...), all this easily configurable.
+Allows you to define a special item that displays the distance between you and the nearest chest, as well as the number of chests within the defined radius.
+
+All this with a simple and complete configuration.
 
 ## Installation
-You can download the latest version of the plugin in the [releases](https://github.com/Bluzzi/ChestFinder/releases) tab of this repository, or via the [Poggit](https://poggit.pmmp.io/p/ChestFinder/1.3) website.
+- [GitHub releases](https://github.com/Bluzzi/ChestFinder/releases)
+- [Poggit](https://poggit.pmmp.io/p/ChestFinder)
 
-## Configuration:
-### Base config
-| Property | Description                                                                              | Default   |
-|---|------------------------------------------------------------------------------------------|-----------|
-| id | The id and meta of the item                                                              | 455:0     | 
-| message-position | Message position (popup, tip or title)                                                   | popup     |
-| radius | The radius of detection                                                                  | 70        |
-| detection | The blocks can be detected (chest, trapped_chest, ender_chest, hopper, barrel, shulker)  | chest     |
-| repeat | The time between each search in seconds (the lower it is, the more risk there is of lag) | 2         |
+## Configuration
+### Base
+| Property         | Description                                                                              | Default |
+| ---------------- | ---------------------------------------------------------------------------------------- | ------- |
+| id               | The id and meta of the item                                                              | 455:0   |
+| message-position | Message position (popup, tip or title)                                                   | popup   |
+| radius           | The radius of detection                                                                  | 70      |
+| detection        | The blocks can be detected (chest, trapped_chest, ender_chest, hopper, barrel, shulker)  | chest   |
+| repeat           | The time between each search in seconds (the lower it is, the more risk there is of lag) | 2       |
 
 ### Messages
 Tags:
-- {chestCount} to indicate the number of vaults around the player.
-- {chestDistance} to indicate the distance between player and the chest.
-- {lineBreak} to make a line break.
+- ``{chestCount}`` to indicate the number of vaults around the player.
+- ``{chestDistance}`` to indicate the distance between player and the chest.
+- ``{lineBreak}`` to make a line break.
  
-| Property | Content |
-|---|---|
-| no-chest | No chest around you |
+| Property       | Content                                                                                                           |
+| -------------- | ----------------------------------------------------------------------------------------------------------------- |
+| no-chest       | No chest around you                                                                                               |
 | chest-detected | There are {chestCount} chest(s) near you...{lineBreak}The closest chest near you is at {chestDistance} block(s) ! |
 
-## Updates
-### Releases
-You can find all official update in the tab [releases](https://github.com/Bluzzi/ChestFinder/releases), here are the last releases:<br>
-- [ChestFinder 1.1](https://github.com/Bluzzi/ChestFinder/releases/tag/1.2)
-- [ChestFinder 1.0](https://github.com/Bluzzi/ChestFinder/releases/tag/1.1)
-### Future updates
-- [x] Automatic configuration update system.
-- [X] Possibility to detect trapped chests, ender chests... and other ?
-- [ ] To be able to choose the distance from there it will be indicated the exact distance with the chest (issue #4).
-- [ ] More indication in the console.
-
-## Error or suggestion
-You can open a issue in this repositorie.
+## Contribution
+You can open a issue or a pull request.
