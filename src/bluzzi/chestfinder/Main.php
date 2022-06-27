@@ -5,12 +5,18 @@ namespace bluzzi\chestfinder;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
 use pocketmine\utils\Config;
+use pocketmine\block\tile\Barrel;
+use pocketmine\block\tile\Chest;
+use pocketmine\block\tile\EnderChest;
+use pocketmine\block\tile\Hopper;
+use pocketmine\block\tile\ShulkerBox;
 use bluzzi\chestfinder\Events;
 
 class Main extends PluginBase {
 
     public static self $main;
     public static Config $config;
+    public static array $detects;
 
     protected function onEnable() : void {
         # Creating the configuration if it is not done and updating it:
@@ -34,6 +40,18 @@ class Main extends PluginBase {
         self::$main = $this;
         self::$config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 
+        foreach (self::$config->get("detection") as $detect) {
+            if (in_array($detect, ["chest", "ender_chest", "hopper", "barrel", "shulker"])) {
+                self::$detects[] = match ($detect) {
+					"chest" => Chest::class,
+					"ender_chest" => EnderChest::class,
+					"hopper" => Hopper::class,
+					"barrel" => Barrel::class,
+					"shulker" => ShulkerBox::class
+				};
+			}
+		}
+        
         # Register events:
         Server::getInstance()->getPluginManager()->registerEvents(new Events(), $this);
     }

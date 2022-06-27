@@ -14,8 +14,14 @@ chest-detected: "§aThere are {chestCount} chest(s) near you...{lineBreak}The cl
 # The radius of detection:
 radius: 70
 
+# Avaible: chest, ender_chest, hopper, barrel, shulker,
+# Tip: chest include normal chests and trapped chests.
+detection:
+  - "chest"
+  - "ender_chest"
+  
 # The time between each search in seconds (the lower it is, the more risk there is of lag; Recommanded: 3):
 repeat: 1
 
 # Plugin's version, please don't touch it !
-version: "1.7.0"
+version: "2.0.0"
