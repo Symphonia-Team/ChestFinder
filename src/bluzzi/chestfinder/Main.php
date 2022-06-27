@@ -15,12 +15,12 @@ class Main extends PluginBase {
     /** @var $main, $config instances */
     public static $main, $config;
 
-    public function onEnable(){
+    protected function onEnable() : void {
         # Creating the configuration if it is not done and updating it:
 		if(file_exists($this->getDataFolder() . "config.yml")){
 			$config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 
-			if($config->get("version") != $this->getDescription()->getVersion() or !$config->exists("version")){
+			if($config->get("version") !== $this->getDescription()->getVersion() or !$config->exists("version")){
 				$this->getLogger()->warning("Critical changes have been made in the new version of the plugin and it seem that your config.yml is a older config.");
 				$this->getLogger()->warning("Your config has been updated, be careful to check the content change !");
 				$this->getLogger()->warning("You can find your old config in oldConfig.yml file.");

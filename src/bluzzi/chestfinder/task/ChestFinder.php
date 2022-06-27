@@ -2,100 +2,96 @@
 
 namespace bluzzi\chestfinder\task;
 
-use pocketmine\scheduler\Task;
-
-use pocketmine\Player;
-
-use pocketmine\item\Item;
-
-use pocketmine\tile\Chest;
-
 use bluzzi\chestfinder\Main;
+use pocketmine\block\tile\Chest;
+use pocketmine\item\LegacyStringToItemParser;
+use pocketmine\player\Player;
+use pocketmine\scheduler\Task;
 
 class ChestFinder extends Task {
 
-    private $player;
-    private $event;
+	private Player $player;
 
-    public function __construct(Player $player, $event){
-        $this->player = $player;
-        $this->event = $event;
-    }
+	private $event;
 
-    public function onRun(int $tick){
-        if(!($this->player->isOnline())){
-            unset($this->event->using[$this->player->getName()]);
-            Main::getInstance()->getScheduler()->cancelTask($this->getTaskId());
-            return;
-        }
+	public function __construct(Player $player, $event) {
+		$this->player = $player;
+		$this->event = $event;
+	}
 
-        $itemHeld = $this->player->getInventory()->getItemInHand();
-        $item = Item::fromString(Main::getDefaultConfig()->get("id"));
+	public function onRun(): void {
+		if (!($this->player->isOnline())) {
+			unset($this->event->using[$this->player->getName()]);
+			$this->getHandler()->cancel();
+			return;
+		}
 
-        if(!($itemHeld->equals($item, true, false))){
-            unset($this->event->using[$this->player->getName()]);
-            Main::getInstance()->getScheduler()->cancelTask($this->getTaskId());
-            return;
-        }
+		$itemHeld = $this->player->getInventory()->getItemInHand();
+		$item = LegacyStringToItemParser::getInstance()->parse(Main::getDefaultConfig()->get("id"));
 
-        # Chests detection:
-        $chestCount = 0;
-        $theChest;
+		if (!($itemHeld->equals($item, true, false))) {
+			unset($this->event->using[$this->player->getName()]);
+			$this->getHandler()->cancel();
+			return;
+		}
 
-        $radius = Main::getDefaultConfig()->get("radius");
+		# Chests detection:
+		$chestCount = 0;
 
-        $xMax = $this->player->getX() + $radius;
-        $zMax = $this->player->getZ() + $radius;
+		$radius = Main::getDefaultConfig()->get("radius");
 
-        for($x = $this->player->getX() - $radius; $x <= $xMax; $x += 16){
-            for($z = $this->player->getZ() - $radius; $z <= $zMax; $z += 16){
-                if(!$this->player->getLevel()->isChunkLoaded($x >> 4, $z >> 4)){
-                    $this->player->getLevel()->loadChunk($x >> 4, $z >> 4);
-                } else {
-                    $chunk = $this->player->getLevel()->getChunk($x >> 4, $z >> 4);
-                
-                    foreach($chunk->getTiles() as $tile){
-                        if(!$tile instanceof Chest) continue;
+		$xMax = $this->player->getPosition()->getX() + $radius;
+		$zMax = $this->player->getPosition()->getZ() + $radius;
 
-                        if($this->player->distance($tile) <= Main::getDefaultConfig()->get("radius")){
-                            if(empty($theChest)){
-                                $theChest = $tile;
-                            } else {
-                                if($this->player->distance($tile) < $this->player->distance($theChest)){
-                                    $theChest = $tile;
-                                }
-                            }
-            
-                            $chestCount++;
-                        }
-                    }
-                }
-            }
-        }
+		for ($x = $this->player->getPosition()->getX() - $radius; $x <= $xMax; $x += 16) {
+			for ($z = $this->player->getPosition()->getZ() - $radius; $z <= $zMax; $z += 16) {
+				if (!$this->player->getPosition()->getWorld()->isChunkLoaded($x >> 4, $z >> 4)) {
+					$this->player->getPosition()->getWorld()->loadChunk($x >> 4, $z >> 4);
+				} else {
+					$chunk = $this->player->getPosition()->getWorld()->getChunk($x >> 4, $z >> 4);
 
-        # Send popup message:
-        if($chestCount !== 0){
-            $message = str_replace(
-                array("{chestCount}", "{chestDistance}", "{lineBreak}"),
-                array($chestCount, round($this->player->distance($theChest), 0), PHP_EOL),
-                Main::getDefaultConfig()->get("chest-detected")
-            );
-        } else {
-            $message = Main::getDefaultConfig()->get("no-chest");
-        }
+					foreach ($chunk->getTiles() as $tile) {
+						if (!$tile instanceof Chest) continue;
 
-        switch(Main::getDefaultConfig()->get("message-position")){
-            case "tip":
-                $this->player->sendTip($message . str_repeat(PHP_EOL, 3));
-            break;
+						if ($this->player->getPosition()->distance($tile->getPosition()->asVector3()) <= Main::getDefaultConfig()->get("radius")) {
+							if (empty($theChest)) {
+								$theChest = $tile;
+							} else {
+								if ($this->player->getPosition()->distance($tile->getPosition()->asVector3()) < $this->player->getPosition()->distance($theChest->getPosition()->asVector3())) {
+									$theChest = $tile;
+								}
+							}
 
-            case "title":
-                $this->player->addTitle(" ", $message);
-            break;
+							$chestCount++;
+						}
+					}
+				}
+			}
+		}
 
-            default:
-                $this->player->sendPopup($message);
-            break;
-        }
-    }
+		# Send popup message:
+		if ($chestCount !== 0) {
+			$message = str_replace(
+				array("{chestCount}", "{chestDistance}", "{lineBreak}"),
+				array($chestCount, round($this->player->getPosition()->distance($theChest->getPosition()->asVector3())), "\n"), // Not PHP_EOL, because make a character  ō
+				Main::getDefaultConfig()->get("chest-detected")
+			);
+		} else {
+			$message = Main::getDefaultConfig()->get("no-chest");
+		}
+
+		switch (Main::getDefaultConfig()->get("message-position")) {
+			case "tip":
+				$this->player->sendTip($message . str_repeat("\n", 3));
+				break;
+
+			case "title":
+				$this->player->sendTitle(" ", $message);
+				break;
+
+			default:
+				$this->player->sendPopup($message);
+				break;
+		}
+	}
 }
