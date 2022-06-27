@@ -1,5 +1,5 @@
 name: ChestFinder
 main: bluzzi\chestfinder\Main
-version: "1.6"
+version: "1.7.0"
 author: Bluzzi
-api: 4.4.0
+api: 4.0.0
