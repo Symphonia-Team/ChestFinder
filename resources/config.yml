@@ -1,5 +1,5 @@
 # The id and meta of the item:
-id: "445:0"
+id: "shulker_shell"
 
 # Message position (popup, tip or title):
 message-position: "popup"
@@ -24,4 +24,4 @@ detection:
 repeat: 1
 
 # Plugin's version, please don't touch it !
-version: "2.0.0"
+version: "2.0.1"
