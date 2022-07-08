@@ -3,7 +3,7 @@
 namespace bluzzi\chestfinder\task;
 
 use pocketmine\block\VanillaBlocks;
-use pocketmine\item\LegacyStringToItemParser;
+use pocketmine\item\StringToItemParser;
 use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
 use bluzzi\chestfinder\Main;
@@ -22,8 +22,7 @@ class ChestFinder extends Task {
 
         $itemHeld = $this->player->getInventory()->getItemInHand();
 
-        // I use LegacyStringToItemParser instead of StringToItemParser because, the option of before (StringToItemParser) takes only with the minecraft: or _ character, while the Legacy version with the ID:META
-        $item = LegacyStringToItemParser::getInstance()->parse(Main::getDefaultConfig()->get("id"));
+        $item = StringToItemParser::getInstance()->parse(Main::getDefaultConfig()->get("id"));
 
         if(!($itemHeld->equals($item, true, false))){
             unset($this->event->using[$this->player->getName()]);
