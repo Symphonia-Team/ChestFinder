@@ -24,4 +24,4 @@ detection:
 repeat: 1
 
 # Plugin's version, please don't touch it !
-version: "2.0.1"
+version: "2.1.0"
